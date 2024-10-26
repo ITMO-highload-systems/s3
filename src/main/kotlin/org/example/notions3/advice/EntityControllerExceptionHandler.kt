@@ -1,24 +1,24 @@
 package org.example.notions3.advice
 
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import org.springframework.web.reactive.function.server.ServerResponse
+import org.springframework.web.reactive.function.server.ServerRequest
+import reactor.core.publisher.Mono
 
 @ControllerAdvice
-class EntityControllerExceptionHandler : ResponseEntityExceptionHandler() {
+class EntityControllerExceptionHandler {
 
     @ExceptionHandler(Exception::class)
-    protected fun handleException(
-        request: HttpServletRequest?,
+    fun handleException(
+        request: ServerRequest,
         ex: Exception
-    ): ResponseEntity<ApiException> {
-        var status = HttpStatus.INTERNAL_SERVER_ERROR.value()
+    ): Mono<ServerResponse> {
+        var status = HttpStatus.INTERNAL_SERVER_ERROR
         val message = ex.message
 
         val responseStatus = AnnotationUtils.findAnnotation(
@@ -26,11 +26,12 @@ class EntityControllerExceptionHandler : ResponseEntityExceptionHandler() {
             ResponseStatus::class.java
         )
         if (responseStatus != null) {
-            status = responseStatus.value.value()
+            status = responseStatus.value
         }
 
-        return ResponseEntity.status(status)
+        return ServerResponse.status(status)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(ApiException(status, message))
+            .bodyValue(ApiException(status.value(), message))
+            .switchIfEmpty(Mono.error(ex))
     }
 }

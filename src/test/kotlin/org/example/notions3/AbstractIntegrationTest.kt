@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.reactive.server.WebTestClient
 import org.testcontainers.containers.MinIOContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.wait.strategy.Wait
@@ -18,11 +18,9 @@ import org.testcontainers.containers.wait.strategy.Wait
 @AutoConfigureMockMvc
 @SpringBootTest
 abstract class AbstractIntegrationTest {
-    @Autowired
-    lateinit var mockMvc: MockMvc
 
     @Autowired
-    lateinit var mapper: ObjectMapper
+    lateinit var webTestClient: WebTestClient
 
     companion object {
         private val logger = LoggerFactory.getLogger(this::class.java)

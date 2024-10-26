@@ -1,94 +1,112 @@
 package org.example.notions3.service
 
-import org.example.notion.minio.util.calculateFileHash
 import org.example.notions3.AbstractIntegrationTest
 import org.example.notions3.repository.ImageRecordRepository
+import org.example.notions3.util.MinioAdapter
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ClassPathResource
 import org.springframework.http.MediaType
-import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.io.File
+import org.springframework.http.client.MultipartBodyBuilder
+import org.springframework.web.reactive.function.BodyInserters
+import reactor.test.StepVerifier
 
 class ImageServiceTest: AbstractIntegrationTest() {
 
     @Autowired
     private lateinit var imageRecordRepository: ImageRecordRepository
 
+    @Autowired
+    private lateinit var minioAdapter: MinioAdapter
+
     private val paragraphId = 1L
+
+    private val imageName = "Cat.jpg"
 
     @AfterEach
     fun clean() {
-        imageRecordRepository.deleteAll()
+        imageRecordRepository.deleteAll().block()
+        minioAdapter.deleteImage(imageName).block()
     }
 
     @Test
-    fun `saveImage - valid image - success safe`() {
+    fun `saveImage - valid image - success save`() {
         val imageRecordsBeforeSave = imageRecordRepository.findByParagraphId(paragraphId)
-        Assertions.assertEquals(0, imageRecordsBeforeSave.size)
+        StepVerifier.create(imageRecordsBeforeSave.collectList())
+            .assertNext { recordsBefore ->
+                assertEquals(0, recordsBefore.size)
+            }
+            .verifyComplete()
 
         saveImage()
+
         val imageRecordsAfterSave = imageRecordRepository.findByParagraphId(paragraphId)
-        Assertions.assertEquals(1, imageRecordsAfterSave.size)
+        StepVerifier.create(imageRecordsAfterSave.collectList())
+            .assertNext { recordsAfter ->
+                assertEquals(1, recordsAfter.size)
+            }
+            .verifyComplete()
+
     }
 
-    @Test
-    fun `deleteImageByParagraphId - valid id - success delete`() {
+    @ParameterizedTest
+    @CsvSource(
+        "true", "false"
+    )
+    fun `deleteImage - valid parameter - success delete`(isDeleteByParagraphId: Boolean) {
+        // Сначала сохраняем изображение
         saveImage()
-        val imageRecordsBeforeSave = imageRecordRepository.findByParagraphId(paragraphId)
-        Assertions.assertEquals(1, imageRecordsBeforeSave.size)
-        deleteImageByParagraphId(paragraphId)
 
-        val imageRecordsAfterSave = imageRecordRepository.findByParagraphId(paragraphId)
-        Assertions.assertEquals(0, imageRecordsAfterSave.size)
+        val imageRecordsBeforeDelete = imageRecordRepository.findByParagraphId(paragraphId)
+        StepVerifier.create(imageRecordsBeforeDelete.collectList())
+            .assertNext { recordsBefore ->
+                assertEquals(1, recordsBefore.size)
+            }
+            .verifyComplete()
+
+        if (isDeleteByParagraphId) {
+            deleteImageByParagraphId(paragraphId)
+        } else {
+            deleteImageByName(imageName)
+        }
+
+        val imageRecordsAfterDelete = imageRecordRepository.findByParagraphId(paragraphId)
+        StepVerifier.create(imageRecordsAfterDelete.collectList())
+            .assertNext { recordsAfter ->
+                assertEquals(0, recordsAfter.size)
+            }
+            .verifyComplete()
     }
 
-//    @Test
-    fun `deleteImageByImageHash - valid hash - success delete`() {
-        val imageHash = saveImage()
-        val imageRecordsBeforeSave = imageRecordRepository.findByParagraphId(paragraphId)
-        Assertions.assertEquals(1, imageRecordsBeforeSave.size)
+    fun saveImage() {
+        val multipartBodyBuilder = MultipartBodyBuilder();
+        multipartBodyBuilder.part("file", ClassPathResource("images/Cat.jpg"))
+            .contentType(MediaType.MULTIPART_FORM_DATA)
 
-        deleteImageByImageHash(imageHash)
-
-        val imageRecordsAfterSave = imageRecordRepository.findByParagraphId(paragraphId)
-        Assertions.assertEquals(0, imageRecordsAfterSave.size)
-    }
-
-    private fun saveImage(): String {
-        val file = File("src/test/resources/images/Cat.jpg")
-
-        val image = MockMultipartFile(
-            "images",
-            file.name,
-            MediaType.IMAGE_JPEG_VALUE,
-            file.readBytes()
-        )
-
-        mockMvc.perform(
-            MockMvcRequestBuilders.multipart("/api/v1/image/create")
-                .file(image)  // Передача файла
-                .param("paragraphId", paragraphId.toString())
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-        ).andExpect(status().isCreated)
-
-        return image.calculateFileHash()
+        webTestClient.put()
+            .uri("/api/v1/image/create/$paragraphId")
+            .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
+            .exchange()
+            .expectStatus().isCreated()
     }
 
     private fun deleteImageByParagraphId(paragraphId: Long) {
-        mockMvc.perform(
-            MockMvcRequestBuilders.delete("/api/v1/image/deleteByParagraphId/${paragraphId}")
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent)
+        webTestClient.delete()
+            .uri("/api/v1/image/deleteByParagraphId/$paragraphId")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isNoContent
     }
 
-    private fun deleteImageByImageHash(imageHash: String) {
-        mockMvc.perform(
-            MockMvcRequestBuilders.delete("/api/v1/image/deleteByImageHash/${imageHash}")
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent)
+    private fun deleteImageByName(imageName: String) {
+        webTestClient.delete()
+            .uri("/api/v1/image/deleteByName/$imageName")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus().isNoContent
     }
 }
