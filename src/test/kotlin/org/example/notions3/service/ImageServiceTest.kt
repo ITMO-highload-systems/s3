@@ -83,7 +83,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
     }
 
     fun saveImage() {
-        val multipartBodyBuilder = MultipartBodyBuilder();
+        val multipartBodyBuilder = MultipartBodyBuilder()
         multipartBodyBuilder.part("file", ClassPathResource("images/Cat.jpg"))
             .contentType(MediaType.MULTIPART_FORM_DATA)
 

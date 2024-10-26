@@ -16,8 +16,9 @@ class ImageController(
 ) {
 
     @GetMapping("/get/{paragraphId}")
-    fun getImageByParagraphId(@PathVariable paragraphId: Long): ResponseEntity<Mono<GetImageResponse>> {
-        return ResponseEntity.ok(imageService.getImageByParagraphId(paragraphId))
+    fun getImageByParagraphId(@PathVariable paragraphId: Long): Mono<ResponseEntity<GetImageResponse>> {
+        return imageService.getImageByParagraphId(paragraphId)
+            .map { imageResponse -> ResponseEntity.ok(imageResponse) }
     }
 
     @PutMapping("/create/{paragraphId}")

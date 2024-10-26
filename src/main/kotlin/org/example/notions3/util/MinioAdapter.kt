@@ -30,7 +30,7 @@ class MinioAdapter(
         }.subscribeOn(Schedulers.boundedElastic())
     }
 
-    fun deleteImage(fileName: String): Mono<Void> {
+    fun deleteImage(fileName: String): Mono<Unit> {
         return Mono.fromCallable {
             minioClient.removeObject(
                 RemoveObjectArgs.builder()
@@ -48,7 +48,7 @@ class MinioAdapter(
             .onErrorMap { e ->
                 IllegalStateException("Failed to delete image with name: $fileName", e)
             }
-            .then()
+            .then(Mono.just(Unit))
     }
 
     fun putObject(file: FilePart): Mono<UploadResponse> {

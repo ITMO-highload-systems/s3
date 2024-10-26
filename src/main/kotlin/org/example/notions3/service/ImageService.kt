@@ -8,9 +8,9 @@ interface ImageService {
 
     fun getImageByParagraphId(paragraphId: Long): Mono<GetImageResponse>
 
-    fun createImages(saveImageRequest: SaveImageRequest): Mono<Void>
+    fun createImages(saveImageRequest: SaveImageRequest): Mono<Unit>
 
-    fun deleteImageByName(imageName: String): Mono<Void>
+    fun deleteImageByName(imageName: String): Mono<Unit>
 
-    fun deleteImageByParagraphId(paragraphId: Long): Mono<Void>
+    fun deleteImageByParagraphId(paragraphId: Long): Mono<Unit>
 }

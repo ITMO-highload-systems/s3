@@ -26,12 +26,12 @@ class ImageServiceImpl(
             .map { imageUrls -> GetImageResponse(imageUrls) }
     }
 
-    override fun createImages(saveImageRequest: SaveImageRequest): Mono<Void> {
-        return uploadImage(saveImageRequest.image, saveImageRequest.paragraphId).then()
+    override fun createImages(saveImageRequest: SaveImageRequest): Mono<Unit> {
+        return uploadImage(saveImageRequest.image, saveImageRequest.paragraphId).then(Mono.just(Unit))
     }
 
 
-    override fun deleteImageByName(imageName: String): Mono<Void> {
+    override fun deleteImageByName(imageName: String): Mono<Unit> {
         return imageRecordRepository.findByImageName(imageName)
             .flatMap { imageRecord ->
                 if (imageRecord != null) {
@@ -39,11 +39,11 @@ class ImageServiceImpl(
                 } else {
                     Mono.empty()
                 }
-            }
+            }.then(Mono.just(Unit))
     }
 
-    override fun deleteImageByParagraphId(paragraphId: Long): Mono<Void> {
-        return imageRecordRepository.deleteByParagraphId(paragraphId)
+    override fun deleteImageByParagraphId(paragraphId: Long): Mono<Unit> {
+        return imageRecordRepository.deleteByParagraphId(paragraphId).then(Mono.just(Unit))
     }
 
 
@@ -62,7 +62,7 @@ class ImageServiceImpl(
             }
     }
 
-    private fun deleteImage(imageRecord: ImageRecord): Mono<Void> {
+    private fun deleteImage(imageRecord: ImageRecord): Mono<Unit> {
         return imageRecordRepository.deleteById(imageRecord.id)
             .then(
                 imageRecordRepository.findByImageName(imageRecord.imageName)
@@ -70,7 +70,7 @@ class ImageServiceImpl(
                         if (existingRecord == null) {
                             minioAdapter.deleteImage(imageRecord.imageName)
                         } else {
-                            Mono.empty()
+                            Mono.just(Unit)
                         }
                     }
             )
