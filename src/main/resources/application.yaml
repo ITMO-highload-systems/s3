@@ -1,15 +1,10 @@
 spring:
   r2dbc:
-    name: postgres
-    password: postgres
-    url: r2dbc:postgresql://localhost:5432/demo
+    name: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    url: ${DATABASE_URL:r2dbc:postgresql://localhost:5432/demo}
   application:
     name: notion-s3
-  datasource:
-    url: ${DATABASE_URL:r2dbc:postgresql://localhost:5432/demo}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
 
 minio:
   endpoint: ${MINIO_ENDPOINT:http://localhost:9000}

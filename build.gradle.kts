@@ -21,7 +21,6 @@ repositories {
 // Dependencies
 val minioVersion = "8.5.11"
 val testContainersVersion = "1.20.1"
-val mapstructVersion = "1.6.0"
 val flyWayVersion = "10.10.0"
 val postgresqlVersion = "42.7.3"
 val jacksonVersion = "2.17.2"
