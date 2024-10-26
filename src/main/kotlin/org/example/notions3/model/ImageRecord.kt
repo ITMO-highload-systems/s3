@@ -7,20 +7,20 @@ import org.springframework.data.relational.core.mapping.Table
 data class ImageRecord(
     @Id
     val id: Long,
-    val imageHash: String,
+    val imageName: String,
     val paragraphId: Long
 ) {
     class Builder {
         private var id: Long = 0
-        private var imageHash: String = ""
+        private var imageName: String = ""
         private var paragraphId: Long = 0
 
         fun id(id: Long) = apply { this.id = id }
-        fun imageHash(imageHash: String) = apply { this.imageHash = imageHash }
+        fun imageName(imageName: String) = apply { this.imageName = imageName }
         fun paragraphId(paragraphId: Long) = apply { this.paragraphId = paragraphId }
 
         fun build(): ImageRecord {
-            return ImageRecord(id, imageHash, paragraphId)
+            return ImageRecord(id, imageName, paragraphId)
         }
     }
 }

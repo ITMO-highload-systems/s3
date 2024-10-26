@@ -31,7 +31,7 @@ CREATE TABLE paragraph
 CREATE TABLE image_record
 (
     id           SERIAL PRIMARY KEY,
-    image_hash   VARCHAR(255) NOT NULL,
+    image_name   VARCHAR(255) UNIQUE NOT NULL,
     paragraph_id INT REFERENCES paragraph (id)
 );
 

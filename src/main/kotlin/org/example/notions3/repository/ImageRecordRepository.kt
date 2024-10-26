@@ -1,23 +1,19 @@
 package org.example.notions3.repository
 
 import org.example.notions3.model.ImageRecord
-import org.springframework.data.jdbc.repository.query.Modifying
-import org.springframework.data.jdbc.repository.query.Query
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.r2dbc.repository.Query
+import org.springframework.data.repository.reactive.ReactiveCrudRepository
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
-interface ImageRecordRepository : CrudRepository<ImageRecord, Long>{
+interface ImageRecordRepository : ReactiveCrudRepository<ImageRecord, Long> {
 
-    @Query("select * from image_record where image_hash = :imageHash")
-    fun findByImageHash(imageHash: String): ImageRecord?
+    @Query("SELECT * FROM image_record WHERE image_name = :imageName")
+    fun findByImageName(imageName: String): Mono<ImageRecord>
 
-    @Query("select * from image_record where paragraph_id = :paragraphId")
-    fun findByParagraphId(paragraphId: Long): List<ImageRecord>
+    @Query("SELECT * FROM image_record WHERE paragraph_id = :paragraphId")
+    fun findByParagraphId(paragraphId: Long): Flux<ImageRecord?>
 
-    @Modifying
-    @Query("delete from image_record where image_hash = :imageHash")
-    fun deleteByImageHash(imageHash: String)
-
-    @Modifying
-    @Query("delete from image_record where paragraph_id = :paragraphId")
-    fun deleteByParagraphId(paragraphId: Long)
+    @Query("DELETE FROM image_record WHERE paragraph_id = :paragraphId")
+    fun deleteByParagraphId(paragraphId: Long): Mono<Void>
 }
