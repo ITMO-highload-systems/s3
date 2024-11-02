@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 interface ImageRecordRepository : ReactiveCrudRepository<ImageRecord, Long> {
 
     @Query("SELECT * FROM image_record WHERE image_name = :imageName")
-    fun findByImageName(imageName: String): Mono<ImageRecord>
+    fun findByImageName(imageName: String): Mono<ImageRecord?>
 
     @Query("SELECT * FROM image_record WHERE paragraph_id = :paragraphId")
     fun findByParagraphId(paragraphId: Long): Flux<ImageRecord?>

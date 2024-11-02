@@ -27,6 +27,9 @@ val jacksonVersion = "2.17.2"
 val kotlinJetBrainsVersion = "2.0.20"
 val r2dbcVersion = "1.0.7.RELEASE"
 val reactorVersion = "3.6.11"
+val cloudVersion = "4.1.3"
+val wiremockVersion = "3.9.2"
+val reactiveFeignVersion = "4.2.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -37,6 +40,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("org.flywaydb:flyway-core:$flyWayVersion")
     implementation("io.minio:minio:$minioVersion")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:$cloudVersion")
+    implementation("com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:$reactiveFeignVersion")
 
     // Runtime dependencies
     runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
@@ -52,6 +57,7 @@ dependencies {
     testImplementation("org.testcontainers:r2dbc:$testContainersVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinJetBrainsVersion")
     testImplementation("io.projectreactor:reactor-test:$reactorVersion")
+    testImplementation("org.wiremock:wiremock-standalone:$wiremockVersion")
 }
 
 kotlin {

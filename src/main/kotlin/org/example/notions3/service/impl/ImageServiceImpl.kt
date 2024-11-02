@@ -1,5 +1,6 @@
 package org.example.notions3.service.impl
 
+import org.example.notions3.client.CoreClient
 import org.example.notions3.dto.request.SaveImageRequest
 import org.example.notions3.dto.response.GetImageResponse
 import org.example.notions3.model.ImageRecord
@@ -13,7 +14,8 @@ import reactor.core.publisher.Mono
 @Service
 class ImageServiceImpl(
     private val minioAdapter: MinioAdapter,
-    private val imageRecordRepository: ImageRecordRepository
+    private val imageRecordRepository: ImageRecordRepository,
+    private val coreClient: CoreClient
 ) : ImageService {
 
     override fun getImageByParagraphId(paragraphId: Long): Mono<GetImageResponse> {
@@ -27,7 +29,15 @@ class ImageServiceImpl(
     }
 
     override fun createImages(saveImageRequest: SaveImageRequest): Mono<Unit> {
-        return uploadImage(saveImageRequest.image, saveImageRequest.paragraphId).then(Mono.just(Unit))
+        return coreClient.isPossibleAddImageToParagraph(saveImageRequest.paragraphId.toString())
+            .map { it ?: false }
+            .flatMap { isPossible ->
+                if (!isPossible) {
+                    Mono.empty()
+                } else {
+                    uploadImage(saveImageRequest.image, saveImageRequest.paragraphId).then(Mono.just(Unit))
+                }
+            }
     }
 
 

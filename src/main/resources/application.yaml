@@ -1,8 +1,8 @@
 spring:
   r2dbc:
-    name: ${DATABASE_USERNAME:postgres}
+    username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:postgres}
-    url: ${DATABASE_URL:r2dbc:postgresql://localhost:5432/demo}
+    url: ${DATABASE_URL:r2dbc:postgresql://localhost:5432/postgres}
   application:
     name: notion-s3
   servlet:
@@ -21,5 +21,8 @@ minio:
   bucket: ${MINIO_BUCKET:my-bucket}
 
 server:
-  port: {$PORT:8090}
+  port: ${SERVER_PORT:8092}
 
+integrations:
+  core:
+    url: "localhost:8090"
