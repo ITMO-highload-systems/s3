@@ -1,7 +1,15 @@
-integrations:
-  core:
-    url: "localhost:87"
+application:
+  security:
+    jwt:
+      secret-key: TestMegaLargeSigningSecretKeyForDemoApplicationMegaLargeSigningSecretKeyForDemoApplication
 
 spring:
   main:
     allow-bean-definition-overriding: true
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            NOTION[0]:
+              uri: http://localhost:87

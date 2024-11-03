@@ -40,12 +40,17 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("org.flywaydb:flyway-core:$flyWayVersion")
     implementation("io.minio:minio:$minioVersion")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:$cloudVersion")
     implementation("com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:$reactiveFeignVersion")
 
     // Runtime dependencies
     runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:$flyWayVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.1")
 
     // Test dependencies
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -58,6 +63,11 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinJetBrainsVersion")
     testImplementation("io.projectreactor:reactor-test:$reactorVersion")
     testImplementation("org.wiremock:wiremock-standalone:$wiremockVersion")
+}
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.3")
+    }
 }
 
 kotlin {

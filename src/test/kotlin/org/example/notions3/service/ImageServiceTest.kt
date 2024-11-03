@@ -2,7 +2,9 @@ package org.example.notions3.service
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.google.common.net.HttpHeaders.AUTHORIZATION
 import org.example.notions3.AbstractIntegrationTest
+import org.example.notions3.JwtUtil
 import org.example.notions3.repository.ImageRecordRepository
 import org.example.notions3.util.MinioAdapter
 import org.junit.jupiter.api.AfterEach
@@ -14,6 +16,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.client.MultipartBodyBuilder
 import org.springframework.web.reactive.function.BodyInserters
@@ -30,6 +33,9 @@ class ImageServiceTest: AbstractIntegrationTest() {
     @Autowired
     @Qualifier("mockCoreService")
     private lateinit var coreService: WireMockServer
+
+    @Autowired
+    private lateinit var jwtUtil: JwtUtil
 
     private val paragraphId = 1L
 
@@ -136,11 +142,12 @@ class ImageServiceTest: AbstractIntegrationTest() {
     fun saveImage() {
         val multipartBodyBuilder = MultipartBodyBuilder()
         multipartBodyBuilder.part("file", ClassPathResource("images/Cat.jpg"))
-            .contentType(MediaType.MULTIPART_FORM_DATA)
 
         webTestClient.put()
             .uri("/api/v1/image/create/$paragraphId")
             .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
+            .header(AUTHORIZATION, "Bearer " + jwtUtil.generateToken())
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA.toString())
             .exchange()
             .expectStatus().isCreated()
     }
@@ -149,6 +156,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
         webTestClient.delete()
             .uri("/api/v1/image/deleteByParagraphId/$paragraphId")
             .accept(MediaType.APPLICATION_JSON)
+            .header(AUTHORIZATION, "Bearer " + jwtUtil.generateToken())
             .exchange()
             .expectStatus().isNoContent
     }
@@ -157,6 +165,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
         webTestClient.delete()
             .uri("/api/v1/image/deleteByName/$imageName")
             .accept(MediaType.APPLICATION_JSON)
+            .header(AUTHORIZATION, "Bearer " + jwtUtil.generateToken())
             .exchange()
             .expectStatus().isNoContent
     }

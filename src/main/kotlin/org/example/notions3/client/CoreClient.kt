@@ -6,8 +6,7 @@ import reactivefeign.spring.config.ReactiveFeignClient
 import reactor.core.publisher.Mono
 
 @ReactiveFeignClient(
-    value = "core",
-    url = "\${integrations.core.url}"
+    value = "NOTION"
 )
 interface CoreClient {
 
