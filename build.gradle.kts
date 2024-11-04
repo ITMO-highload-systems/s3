@@ -30,6 +30,7 @@ val reactorVersion = "3.6.11"
 val cloudVersion = "4.1.3"
 val wiremockVersion = "3.9.2"
 val reactiveFeignVersion = "4.2.1"
+val cloudConfigVersion = "4.1.3"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -41,8 +42,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flyWayVersion")
     implementation("io.minio:minio:$minioVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:$cloudVersion")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:$cloudConfigVersion")
     implementation("com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:$reactiveFeignVersion")
-
     // Runtime dependencies
     runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:$flyWayVersion")

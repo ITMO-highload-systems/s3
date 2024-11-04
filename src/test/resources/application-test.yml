@@ -2,14 +2,15 @@ spring:
   r2dbc:
     username: ${DATABASE_USERNAME:postgres}
     password: ${DATABASE_PASSWORD:postgres}
-    url: ${DATABASE_URL:r2dbc:postgresql://localhost:5432/postgres}
+    url: ${DATABASE_URL:r2dbc:postgresql://localhost:5432/notion-s3}
   application:
     name: notion-s3
   servlet:
     multipart:
       max-file-size: ${MAX_FILE_SIZE:200MB}
       max-request-size: ${MAX_REQUEST_SIZE:200MB}
-
+  main:
+    allow-bean-definition-overriding: true
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -23,6 +24,7 @@ minio:
 server:
   port: ${SERVER_PORT:8092}
 
+
 integrations:
   core:
-    url: "localhost:8090"
+    url: "localhost:87"

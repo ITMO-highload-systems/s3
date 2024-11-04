@@ -1,7 +1,0 @@
-integrations:
-  core:
-    url: "localhost:87"
-
-spring:
-  main:
-    allow-bean-definition-overriding: true
