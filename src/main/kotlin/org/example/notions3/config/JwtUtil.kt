@@ -1,4 +1,4 @@
-package org.example.notions3
+package org.example.notions3.config
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -6,6 +6,7 @@ import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
@@ -15,13 +16,39 @@ import java.util.*
 class JwtUtil {
     @Value("\${application.security.jwt.secret-key}")
     private val secretKey: String? = null
+    @Value("\${application.security.jwt.expiration}")
     private val jwtExpiration: Long = 10000
+    @Value("\${application.security.jwt.server-expiration}")
+    private val jwtServerExpiration: Long = 123456789
+    @Value("\${spring.application.name}")
+    private val serverName: String = "NOTION-S3"
 
     fun generateToken(
         extraClaims: Map<String?, Any?>,
         userDetails: UserDetails
     ): String {
         return buildToken(extraClaims, userDetails, jwtExpiration)
+    }
+
+    fun generateServerToken(
+    ): String {
+        return buildToken(
+            mapOf("role" to "ROLE_ADMIN"), object : UserDetails {
+                override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+                    return mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN"))
+                }
+
+                override fun getPassword(): String {
+                    return "password"
+                }
+
+                override fun getUsername(): String {
+                    return serverName
+                }
+
+            },
+            jwtServerExpiration
+        )
     }
 
     fun generateToken(): String {

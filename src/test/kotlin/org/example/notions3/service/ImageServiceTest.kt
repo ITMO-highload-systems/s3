@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.google.common.net.HttpHeaders.AUTHORIZATION
 import org.example.notions3.AbstractIntegrationTest
-import org.example.notions3.JwtUtil
+import org.example.notions3.config.JwtUtil
 import org.example.notions3.repository.ImageRecordRepository
 import org.example.notions3.util.MinioAdapter
 import org.junit.jupiter.api.AfterEach
