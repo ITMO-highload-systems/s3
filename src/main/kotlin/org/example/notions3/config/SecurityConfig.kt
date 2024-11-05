@@ -21,6 +21,7 @@ class SecurityConfig(
             .csrf { csrf -> csrf.disable() }
             .authenticationManager(jwtAuthenticationManager)
             .authorizeExchange { auth ->
+                auth.pathMatchers("/actuator/**").permitAll()
                 auth.anyExchange().authenticated()
             }
             .securityContextRepository(securityContextRepository)
