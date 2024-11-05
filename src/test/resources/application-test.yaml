@@ -11,5 +11,8 @@ spring:
       client:
         simple:
           instances:
-            NOTION[0]:
-              uri: http://localhost:87
+            notion[0]:
+              uri: http://localhost:${core.mock-port}
+
+core:
+  mock-port: 87

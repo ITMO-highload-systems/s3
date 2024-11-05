@@ -1,4 +1,4 @@
-package org.example.notions3.config
+package org.example.notions3.auth
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm

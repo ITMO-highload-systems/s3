@@ -2,6 +2,7 @@ package org.example.notions3.config
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
+import org.example.notions3.auth.JwtUtil
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders.AUTHORIZATION

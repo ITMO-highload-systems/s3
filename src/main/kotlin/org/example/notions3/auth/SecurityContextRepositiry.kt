@@ -1,4 +1,4 @@
-package org.example.notions3.config
+package org.example.notions3.auth
 
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

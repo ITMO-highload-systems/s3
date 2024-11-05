@@ -1,5 +1,7 @@
 package org.example.notions3.config
 
+import org.example.notions3.auth.JWTAuthenticationManager
+import org.example.notions3.auth.SecurityContextRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity

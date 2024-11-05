@@ -1,4 +1,4 @@
-package org.example.notions3.config
+package org.example.notions3.auth
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono
 import java.security.Key
 import java.util.*
 import java.util.function.Function
-
 
 @Component
 class JWTAuthenticationManager : ReactiveAuthenticationManager {
