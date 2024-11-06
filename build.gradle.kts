@@ -35,6 +35,7 @@ val jjwtApiVersion = "0.11.2"
 val jjwtImplVersion = "0.11.5"
 val jjwtJacksonVersion = "0.11.1"
 val reactorCloudStarterVersion = "4.2.1"
+val cloudConfigVersion = "4.1.3"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -45,6 +46,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:$reactorCloudStarterVersion")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:$cloudConfigVersion")
     implementation("org.springframework.data:spring-data-r2dbc:$springDataR2dbc")
     implementation("org.postgresql:r2dbc-postgresql:$r2dbcVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
