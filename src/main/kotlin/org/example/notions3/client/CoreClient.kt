@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono
 )
 interface CoreClient {
 
-    @GetMapping("/api/v1/paragraph/isPossibleAddImageToParagraph/{paragraphId}")
+    @GetMapping("/paragraphs/{paragraphId}/images/availability")
     fun isPossibleAddImageToParagraph(@PathVariable paragraphId: String): Mono<Boolean>
 }
