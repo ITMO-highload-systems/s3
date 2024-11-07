@@ -15,13 +15,13 @@ class ImageController(
     private val imageService: ImageService
 ) {
 
-    @GetMapping("/get/{paragraphId}")
+    @GetMapping("{paragraphId}")
     fun getImageByParagraphId(@PathVariable paragraphId: Long): Mono<ResponseEntity<GetImageResponse>> {
         return imageService.getImageByParagraphId(paragraphId)
             .map { imageResponse -> ResponseEntity.ok(imageResponse) }
     }
 
-    @PutMapping("/create/{paragraphId}")
+    @PutMapping("/{paragraphId}")
     fun saveImage(
         @PathVariable paragraphId: Long,
         @RequestPart("file") filePart: FilePart
@@ -30,13 +30,13 @@ class ImageController(
             .then(Mono.just(ResponseEntity<Unit>(HttpStatus.CREATED)))
     }
 
-    @DeleteMapping("/deleteByParagraphId/{paragraphId}")
+    @DeleteMapping("/by-paragraph/{paragraphId}")
     fun deleteImageByParagraphId(@PathVariable paragraphId: Long): Mono<ResponseEntity<Unit>> {
         return imageService.deleteImageByParagraphId(paragraphId)
             .then(Mono.just(ResponseEntity.noContent().build()))
     }
 
-    @DeleteMapping("/deleteByName/{imageName}")
+    @DeleteMapping("/by-name/{imageName}")
     fun deleteImageByName(@PathVariable imageName: String): Mono<ResponseEntity<Unit>> {
         return imageService.deleteImageByName(imageName)
             .then(Mono.just(ResponseEntity.noContent().build()))
