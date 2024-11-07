@@ -144,7 +144,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
         multipartBodyBuilder.part("file", ClassPathResource("images/Cat.jpg"))
 
         webTestClient.put()
-            .uri("/api/v1/image/create/$paragraphId")
+            .uri("/api/v1/image/$paragraphId")
             .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
             .header(AUTHORIZATION, "Bearer " + jwtUtil.generateToken())
             .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA.toString())
@@ -154,7 +154,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
 
     private fun deleteImageByParagraphId(paragraphId: Long) {
         webTestClient.delete()
-            .uri("/api/v1/image/deleteByParagraphId/$paragraphId")
+            .uri("/api/v1/image/by-paragraph/$paragraphId")
             .accept(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION, "Bearer " + jwtUtil.generateToken())
             .exchange()
@@ -163,7 +163,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
 
     private fun deleteImageByName(imageName: String) {
         webTestClient.delete()
-            .uri("/api/v1/image/deleteByName/$imageName")
+            .uri("/api/v1/image/by-name/$imageName")
             .accept(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION, "Bearer " + jwtUtil.generateToken())
             .exchange()
