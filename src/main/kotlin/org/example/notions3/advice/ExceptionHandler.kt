@@ -2,6 +2,7 @@ package org.example.notions3.advice
 
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import feign.FeignException
 import org.springframework.core.annotation.Order
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.http.HttpStatus
@@ -33,6 +34,16 @@ class ExceptionHandler(private val objectMapper: ObjectMapper) : WebExceptionHan
             exchange.response.setStatusCode(HttpStatus.BAD_REQUEST)
             val bytes: ByteArray =
                 ex.message?.toByteArray(StandardCharsets.UTF_8) ?: "No message".toByteArray(StandardCharsets.UTF_8)
+            val buffer: DataBuffer = exchange.response.bufferFactory().wrap(bytes)
+            return exchange.response.writeWith(Flux.just(buffer))
+        }
+        if (ex is FeignException) {
+            exchange.response.setStatusCode(HttpStatus.valueOf(ex.status()))
+            val bytes: ByteArray =
+                ex.message?.toByteArray(
+                    StandardCharsets.UTF_8
+                )
+                    ?: "No message".toByteArray(StandardCharsets.UTF_8)
             val buffer: DataBuffer = exchange.response.bufferFactory().wrap(bytes)
             return exchange.response.writeWith(Flux.just(buffer))
         }
