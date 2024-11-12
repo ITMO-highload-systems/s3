@@ -53,7 +53,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
     fun setUp() {
         token = jwtUtil.generateToken()
         coreService.stubFor(
-            WireMock.get(WireMock.urlPathMatching("/api/v1/paragraphs/\\d+/images/availability"))
+            WireMock.get(WireMock.urlPathMatching("/api/v1/paragraph/paragraphs/\\d+/images/availability"))
                 .withHeader(AUTHORIZATION, containing("Bearer"))
                 .willReturn(
                     WireMock.aResponse()
@@ -87,7 +87,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
     @Test
     fun `saveImage - invalid image - failed save`() {
         coreService.stubFor(
-            WireMock.get(WireMock.urlPathMatching("/api/v1/paragraphs/\\d+/images/availability"))
+            WireMock.get(WireMock.urlPathMatching("/api/v1/paragraph/paragraphs/\\d+/images/availability"))
                 .willReturn(
                     WireMock.aResponse()
                         .withStatus(200)

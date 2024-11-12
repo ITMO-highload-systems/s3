@@ -33,7 +33,7 @@ class ImageServiceImpl(
             .map { it ?: false }
             .flatMap { isPossible ->
                 if (!isPossible) {
-                    Mono.empty()
+                    Mono.error(IllegalArgumentException("Paragraph not exist"))
                 } else {
                     uploadImage(saveImageRequest.image, saveImageRequest.paragraphId).then(Mono.just(Unit))
                 }

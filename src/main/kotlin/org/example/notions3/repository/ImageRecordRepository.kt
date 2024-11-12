@@ -3,9 +3,11 @@ package org.example.notions3.repository
 import org.example.notions3.model.ImageRecord
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.reactive.ReactiveCrudRepository
+import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
+@Repository
 interface ImageRecordRepository : ReactiveCrudRepository<ImageRecord, Long> {
 
     @Query("SELECT * FROM image_record WHERE image_name = :imageName")
