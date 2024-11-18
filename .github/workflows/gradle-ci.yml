@@ -42,4 +42,4 @@ jobs:
 
       # Скачиваем Gradle Wrapper и выполняем сборку
       - name: Build and test
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build

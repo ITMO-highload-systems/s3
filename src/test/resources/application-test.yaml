@@ -35,7 +35,7 @@ application:
       secret-key: TestMegaLargeSigningSecretKeyForDemoApplicationMegaLargeSigningSecretKeyForDemoApplication
 
 core:
-  mock-port: 87
+  mock-port: 8887
 
 minio:
   endpoint: http://localhost:9000
