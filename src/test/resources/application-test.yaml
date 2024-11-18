@@ -1,21 +1,10 @@
-application:
-  security:
-    jwt:
-      expiration: 123456789
-      server-expiration: 123456789009876
-      secret-key: TestMegaLargeSigningSecretKeyForDemoApplicationMegaLargeSigningSecretKeyForDemoApplication
-
 spring:
-  r2dbc:
-    username: ${NOTION_S3_DATABASE_USERNAME:postgres}
-    password: ${NOTION_S3_DATABASE_PASSWORD:postgres}
-    url: ${NOTION_S3_DATABASE_URL:r2dbc:postgresql://localhost:5432/notion-s3}
-  servlet:
-    multipart:
-      max-file-size: ${MAX_FILE_SIZE:200MB}
-      max-request-size: ${MAX_REQUEST_SIZE:200MB}
   application:
     name: notion-s3
+  r2dbc:
+    username: postgres
+    password: postgres
+    url: r2dbc:postgresql://localhost:5432/notion-s3
   main:
     allow-bean-definition-overriding: true
   flyway:
@@ -38,30 +27,18 @@ eureka:
     service-url:
       registerWithEureka: false
 
+application:
+  security:
+    jwt:
+      expiration: 123456789
+      server-expiration: 123456789009876
+      secret-key: TestMegaLargeSigningSecretKeyForDemoApplicationMegaLargeSigningSecretKeyForDemoApplication
+
 core:
   mock-port: 87
 
 minio:
-  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
-  accessKey: ${MINIO_ACCESS_KEY:minioadmin}
-  secretKey: ${MINIO_SECRET_KEY:minioadmin}
-  bucket: ${MINIO_BUCKET:my-bucket}
-
-server:
-  port: 0
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-resilience4j:
-  circuitbreaker:
-    configs:
-      default:
-        sliding-window-size: 10
-        sliding-window-type: count_based
-        minimum-number-of-calls: 5
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 5s
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket: my-bucket
