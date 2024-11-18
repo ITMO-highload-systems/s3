@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles
 @ActiveProfiles("test")
 class WireMockConfig {
     @Value("\${core.mock-port}")
-    private val port: Int = 87
+    private var port: Int = 87
 
     @Bean(name = ["mockCoreService"], initMethod = "start", destroyMethod = "stop")
     fun mockCoreService(): WireMockServer {

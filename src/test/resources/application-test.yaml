@@ -1,14 +1,19 @@
-application:
-  security:
-    jwt:
-      secret-key: TestMegaLargeSigningSecretKeyForDemoApplicationMegaLargeSigningSecretKeyForDemoApplication
-
 spring:
+  application:
+    name: notion-s3
+  r2dbc:
+    username: postgres
+    password: postgres
+    url: r2dbc:postgresql://localhost:5432/notion-s3
   main:
     allow-bean-definition-overriding: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
   cloud:
     config:
       enabled: false
+      fail-fast: false
     discovery:
       client:
         simple:
@@ -16,5 +21,24 @@ spring:
             notion[0]:
               uri: http://localhost:${core.mock-port}
 
+eureka:
+  client:
+    enabled: false
+    service-url:
+      registerWithEureka: false
+
+application:
+  security:
+    jwt:
+      expiration: 123456789
+      server-expiration: 123456789009876
+      secret-key: TestMegaLargeSigningSecretKeyForDemoApplicationMegaLargeSigningSecretKeyForDemoApplication
+
 core:
-  mock-port: 87
+  mock-port: 8887
+
+minio:
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucket: my-bucket
