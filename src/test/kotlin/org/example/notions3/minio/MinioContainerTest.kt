@@ -3,9 +3,11 @@ package org.example.notions3.minio
 import org.example.notions3.AbstractIntegrationTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.springframework.test.context.ActiveProfiles
 import java.net.HttpURLConnection
 import java.net.URI
 
+@ActiveProfiles("test")
 class MinioContainerTest : AbstractIntegrationTest() {
 
     @Test

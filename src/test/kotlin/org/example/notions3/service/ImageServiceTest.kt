@@ -20,9 +20,11 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.client.MultipartBodyBuilder
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.web.reactive.function.BodyInserters
 import reactor.test.StepVerifier
 
+@ActiveProfiles("test")
 class ImageServiceTest: AbstractIntegrationTest() {
 
     @Autowired
@@ -73,7 +75,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
             }
             .verifyComplete()
 
-        saveImage()
+        saveImage(201)
 
         val imageRecordsAfterSave = imageRecordRepository.findByParagraphId(paragraphId)
         StepVerifier.create(imageRecordsAfterSave.collectList())
@@ -103,7 +105,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
             }
             .verifyComplete()
 
-        saveImage()
+        saveImage(400)
 
         val imageRecordsAfterSave = imageRecordRepository.findByParagraphId(paragraphId)
         StepVerifier.create(imageRecordsAfterSave.collectList())
@@ -120,7 +122,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
     )
     fun `deleteImage - valid parameter - success delete`(isDeleteByParagraphId: Boolean) {
         // Сначала сохраняем изображение
-        saveImage()
+        saveImage(201)
 
         val imageRecordsBeforeDelete = imageRecordRepository.findByParagraphId(paragraphId)
         StepVerifier.create(imageRecordsBeforeDelete.collectList())
@@ -143,7 +145,7 @@ class ImageServiceTest: AbstractIntegrationTest() {
             .verifyComplete()
     }
 
-    fun saveImage() {
+    fun saveImage(expectedStatus: Int) {
         val multipartBodyBuilder = MultipartBodyBuilder()
         multipartBodyBuilder.part("file", ClassPathResource("images/Cat.jpg"))
 
@@ -153,7 +155,9 @@ class ImageServiceTest: AbstractIntegrationTest() {
             .header(AUTHORIZATION, "Bearer $token")
             .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA.toString())
             .exchange()
-            .expectStatus().isCreated()
+            .expectStatus().value { status ->
+                assert(status == expectedStatus) { "Expected status $expectedStatus but got $status" }
+            }
     }
 
     private fun deleteImageByParagraphId(paragraphId: Long) {
