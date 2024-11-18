@@ -10,4 +10,4 @@ COPY build/libs/notion-s3-0.0.1-SNAPSHOT.jar app.jar
 RUN chmod +x /app/app.jar
 
 # Запуск приложения
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
