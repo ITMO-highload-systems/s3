@@ -13,6 +13,7 @@ import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import java.nio.charset.StandardCharsets
+import javax.naming.ServiceUnavailableException
 
 
 @Component
@@ -39,6 +40,17 @@ class ExceptionHandler(private val objectMapper: ObjectMapper) : WebExceptionHan
         }
         if (ex is FeignException) {
             exchange.response.setStatusCode(HttpStatus.valueOf(ex.status()))
+            val bytes: ByteArray =
+                ex.message?.toByteArray(
+                    StandardCharsets.UTF_8
+                )
+                    ?: "No message".toByteArray(StandardCharsets.UTF_8)
+            val buffer: DataBuffer = exchange.response.bufferFactory().wrap(bytes)
+            return exchange.response.writeWith(Flux.just(buffer))
+        }
+
+        if (ex is ServiceUnavailableException) {
+            exchange.response.setStatusCode(HttpStatus.valueOf(503))
             val bytes: ByteArray =
                 ex.message?.toByteArray(
                     StandardCharsets.UTF_8
