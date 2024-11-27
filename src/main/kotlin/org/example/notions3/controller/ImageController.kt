@@ -1,8 +1,11 @@
 package org.example.notions3.controller
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.servers.Server
 import org.example.notions3.dto.request.SaveImageRequest
 import org.example.notions3.dto.response.GetImageResponse
 import org.example.notions3.service.ImageService
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
@@ -11,6 +14,12 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/api/v1/image")
+@Configuration
+@OpenAPIDefinition(
+    servers = [
+        Server(url = "http://localhost:8765/notion-s3")
+    ]
+)
 class ImageController(
     private val imageService: ImageService
 ) {
