@@ -37,13 +37,13 @@ val jjwtJacksonVersion = "0.11.1"
 val reactorCloudStarterVersion = "4.2.1"
 val cloudConfigVersion = "4.1.3"
 val circuitBreakerVersion = "3.1.2"
+val webmvcUiVersion = "2.0.4"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:$reactorCloudStarterVersion")
@@ -55,6 +55,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core:$flyWayVersion")
     implementation("io.minio:minio:$minioVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtApiVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:$webmvcUiVersion")
+
 
     // Runtime dependencies
     runtimeOnly("org.postgresql:postgresql:$postgresqlVersion")

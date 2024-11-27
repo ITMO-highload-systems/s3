@@ -2,10 +2,7 @@ package org.example.notions3.service
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
-import com.github.tomakehurst.wiremock.client.WireMock.containing
-import com.google.common.net.HttpHeaders.AUTHORIZATION
 import org.example.notions3.AbstractIntegrationTest
-import org.example.notions3.auth.JwtUtil
 import org.example.notions3.repository.ImageRecordRepository
 import org.example.notions3.util.MinioAdapter
 import org.junit.jupiter.api.AfterEach
@@ -37,13 +34,9 @@ class ImageServiceTest: AbstractIntegrationTest() {
     @Qualifier("mockCoreService")
     private lateinit var coreService: WireMockServer
 
-    @Autowired
-    private lateinit var jwtUtil: JwtUtil
-
     private val paragraphId = 1L
 
     private val imageName = "Cat.jpg"
-    private lateinit var token: String
 
     @AfterEach
     fun clean() {
@@ -53,10 +46,8 @@ class ImageServiceTest: AbstractIntegrationTest() {
 
     @BeforeEach
     fun setUp() {
-        token = jwtUtil.generateToken()
         coreService.stubFor(
             WireMock.get(WireMock.urlPathMatching("/api/v1/paragraph/paragraphs/\\d+/images/availability"))
-                .withHeader(AUTHORIZATION, containing("Bearer"))
                 .willReturn(
                     WireMock.aResponse()
                         .withStatus(200)
@@ -152,7 +143,6 @@ class ImageServiceTest: AbstractIntegrationTest() {
         webTestClient.put()
             .uri("/api/v1/image/$paragraphId")
             .body(BodyInserters.fromMultipartData(multipartBodyBuilder.build()))
-            .header(AUTHORIZATION, "Bearer $token")
             .header(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA.toString())
             .exchange()
             .expectStatus().value { status ->
@@ -164,7 +154,6 @@ class ImageServiceTest: AbstractIntegrationTest() {
         webTestClient.delete()
             .uri("/api/v1/image/by-paragraph/$paragraphId")
             .accept(MediaType.APPLICATION_JSON)
-            .header(AUTHORIZATION, "Bearer $token")
             .exchange()
             .expectStatus().isNoContent
     }
@@ -173,7 +162,6 @@ class ImageServiceTest: AbstractIntegrationTest() {
         webTestClient.delete()
             .uri("/api/v1/image/by-name/$imageName")
             .accept(MediaType.APPLICATION_JSON)
-            .header(AUTHORIZATION, "Bearer $token")
             .exchange()
             .expectStatus().isNoContent
     }
