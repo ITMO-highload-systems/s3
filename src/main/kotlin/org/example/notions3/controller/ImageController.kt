@@ -15,11 +15,6 @@ import reactor.core.publisher.Mono
 @RestController
 @RequestMapping("/api/v1/image")
 @Configuration
-@OpenAPIDefinition(
-    servers = [
-        Server(url = "http://localhost:8765/notion-s3")
-    ]
-)
 class ImageController(
     private val imageService: ImageService
 ) {
