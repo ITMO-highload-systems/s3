@@ -25,7 +25,7 @@ class ImageController(
             .map { imageResponse -> ResponseEntity.ok(imageResponse) }
     }
 
-    @PutMapping("/{paragraphId}")
+    @PutMapping("/{paragraphId}", consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
     fun saveImage(
         @PathVariable paragraphId: Long,
         @RequestPart("file") filePart: FilePart
