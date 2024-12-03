@@ -7,6 +7,7 @@ import org.example.notions3.dto.response.GetImageResponse
 import org.example.notions3.service.ImageService
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.bind.annotation.*
@@ -25,7 +26,7 @@ class ImageController(
             .map { imageResponse -> ResponseEntity.ok(imageResponse) }
     }
 
-    @PutMapping("/{paragraphId}", consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/{paragraphId}", consumes= [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun saveImage(
         @PathVariable paragraphId: Long,
         @RequestPart("file") filePart: FilePart
